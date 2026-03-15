@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CERVISCORE | Olimpiadas Cervantinas</title>
+    <!-- Fuentes para estilo futbolero y deportivo -->
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Header / Navbar estilo OneFootball -->
+    <header class="navbar">
+        <div class="container navbar-content">
+            <div class="logo-area">
+                <!-- Se asume que el usuario pondrá el logo en static/img/logo.png -->
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Liceo de Cervantes Logo" class="school-logo" onerror="this.src='https://placehold.co/100x100?text=Cervantes';">
+                <span class="brand-name">CERVISCORE</span>
+            </div>
+            <nav class="nav-links">
+                <a href="#noticias" class="nav-item">Noticias</a>
+                <a href="#posiciones" class="nav-item">Tabla</a>
+                <a href="#goleadores" class="nav-item">Goleadores</a>
+                <a href="#resultados" class="nav-item">Partidos</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section / Noticias Destacadas -->
+    <section id="noticias" class="hero-section text-center">
+        <div class="container">
+            <h2 class="section-title fade-in">ÚLTIMAS NOTICIAS</h2>
+            <div class="news-grid">
+                {% for noticia in noticias %}
+                <div class="news-card fade-in">
+                    <div class="news-image" style="background-image: url('{{ noticia.imagen }}');"></div>
+                    <div class="news-content">
+                        <span class="news-date">{{ noticia.fecha }}</span>
+                        <h3>{{ noticia.titulo }}</h3>
+                        <p>{{ noticia.resumen }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Tabla de Posiciones estilo Mundial 2014 -->
+    <section id="posiciones" class="standings-section">
+        <div class="container">
+            <h2 class="section-title fade-in">TABLA DE POSICIONES</h2>
+            <div class="table-responsive fade-in">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>POS</th>
+                            <th>EQUIPO</th>
+                            <th>PJ</th>
+                            <th>PG</th>
+                            <th>PE</th>
+                            <th>PP</th>
+                            <th>PTS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for equipo in posiciones %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td class="team-name">{{ equipo.equipo }}</td>
+                            <td>{{ equipo.pj }}</td>
+                            <td>{{ equipo.pg }}</td>
+                            <td>{{ equipo.pe }}</td>
+                            <td>{{ equipo.pp }}</td>
+                            <td class="points">{{ equipo.pts }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Goleadores y Estadísticas -->
+    <section id="goleadores" class="stats-section">
+        <div class="container">
+            <h2 class="section-title fade-in">MÁXIMOS ANOTADORES</h2>
+            <div class="stats-grid">
+                {% for goleador in goleadores %}
+                <div class="player-card fade-in">
+                    <div class="rank">#{{ loop.index }}</div>
+                    <div class="player-info">
+                        <h3>{{ goleador.nombre }}</h3>
+                        <span class="course">{{ goleador.curso }}</span>
+                    </div>
+                    <div class="goals">
+                        <span>{{ goleador.goles }}</span>
+                        <small>Goles</small>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-logo">
+                <img src="{{ url_for('static', filename='img/logo.png') }}" class="footer-img-logo" onerror="this.style.display='none'">
+                <h3>CERVISCORE</h3>
+            </div>
+            <p>&copy; 2026 Liceo de Cervantes. Olimpiadas Cervantinas.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

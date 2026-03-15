@@ -1,0 +1,360 @@
+:root {
+    --primary-green: #008751; /* Cervantes Green */
+    --primary-red: #da291c;   /* Cervantes Red */
+    --primary-gold: #fcd116;  /* Cervantes Gold */
+    --text-color: #333;
+    --bg-color: #f4f4f4;
+    --card-bg: #ffffff;
+    --accent-color: #1a1a1a;
+    --font-heading: 'Teko', sans-serif;
+    --font-body: 'Roboto', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--primary-green);
+    color: white;
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.navbar-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.school-logo {
+    height: 50px;
+    width: auto;
+    object-fit: contain;
+}
+
+.brand-name {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--primary-gold);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-item {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1.1rem;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.nav-item::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -5px;
+    left: 0;
+    background-color: var(--primary-gold);
+    transition: width 0.3s ease;
+}
+
+.nav-item:hover {
+    color: var(--primary-gold);
+}
+
+.nav-item:hover::after {
+    width: 100%;
+}
+
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Sections */
+section {
+    padding: 4rem 0;
+}
+
+.section-title {
+    font-family: var(--font-heading);
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 3rem;
+    color: var(--accent-color);
+    text-transform: uppercase;
+    position: relative;
+    display: inline-block;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.section-title::after {
+    content: '';
+    display: block;
+    width: 60%;
+    height: 4px;
+    background: linear-gradient(to right, var(--primary-red), var(--primary-gold));
+    margin: 10px auto 0;
+    border-radius: 2px;
+}
+
+/* Hero / News */
+.hero-section {
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1508098682722-e99c43a406b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
+    color: white;
+    padding: 6rem 0;
+}
+
+.hero-section .section-title {
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.news-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    color: var(--text-color);
+    text-align: left;
+}
+
+.news-card:hover {
+    transform: translateY(-10px);
+}
+
+.news-image {
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+}
+
+.news-content {
+    padding: 20px;
+}
+
+.news-date {
+    font-size: 0.85rem;
+    color: #888;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.news-content h3 {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    margin: 10px 0;
+    line-height: 1.1;
+    color: var(--primary-green);
+}
+
+/* Standings Table */
+.standings-section {
+    background-color: white;
+}
+
+.table-responsive {
+    overflow-x: auto;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-body);
+}
+
+.styled-table thead tr {
+    background-color: var(--primary-red);
+    color: white;
+    text-align: center;
+    font-weight: bold;
+}
+
+.styled-table th, .styled-table td {
+    padding: 15px;
+}
+
+.styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+    text-align: center;
+    transition: background-color 0.2s;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f9f9f9;
+}
+
+.styled-table tbody tr:hover {
+    background-color: #ffeeba; /* Light gold hover */
+    font-weight: 500;
+}
+
+.styled-table .team-name {
+    text-align: left;
+    font-weight: 700;
+    color: var(--primary-green);
+}
+
+.styled-table .points {
+    font-weight: 800;
+    color: var(--primary-red);
+    font-size: 1.1rem;
+}
+
+/* Stats / Goleadores */
+.stats-section {
+    background-color: #f4f4f4;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.player-card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border-left: 5px solid var(--primary-gold);
+    transition: transform 0.3s;
+}
+
+.player-card:hover {
+    transform: scale(1.03);
+}
+
+.rank {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #e0e0e0;
+    margin-right: 15px;
+}
+
+.player-info h3 {
+    font-size: 1.1rem;
+    margin: 0;
+    color: var(--text-color);
+}
+
+.player-info .course {
+    font-size: 0.9rem;
+    color: #777;
+}
+
+.goals {
+    text-align: center;
+    background: var(--primary-green);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 8px;
+}
+
+.goals span {
+    display: block;
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.goals small {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+}
+
+/* Footer */
+footer {
+    background-color: var(--accent-color);
+    color: white;
+    padding: 3rem 0;
+    text-align: center;
+}
+
+.footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-img-logo {
+    height: 40px;
+    filter: brightness(0) invert(1); /* Make logo white for footer */
+}
+
+/* Apple-like Smooth Animations */
+.fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .navbar-content {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .section-title {
+        font-size: 2.2rem;
+    }
+}

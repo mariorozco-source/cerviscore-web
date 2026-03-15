@@ -24,6 +24,21 @@ body {
     overflow-x: hidden;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
+#noticias,
+#posiciones,
+#goleadores,
+#resultados {
+    scroll-margin-top: 110px;
+}
+
+.hidden {
+    display: none;
+}
+
 /* Navbar */
 .navbar {
     background-color: var(--primary-green);

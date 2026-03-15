@@ -22,11 +22,36 @@
             <nav class="nav-links">
                 <a href="#noticias" class="nav-item">Noticias</a>
                 <a href="#posiciones" class="nav-item">Tabla</a>
-                <a href="#goleadores" class="nav-item">Goleadores</a>
+                <a href="#goleadores" class="nav-item">Estadísticas</a>
                 <a href="#resultados" class="nav-item">Partidos</a>
             </nav>
         </div>
     </header>
+
+    <!-- Tournament Selector -->
+    <section class="tournament-selector" style="background-color: #004d2e; padding: 15px 0;">
+        <div class="container" style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 5px;">
+            {% for key, t in torneos_disponibles.items() %}
+            <a href="{{ url_for('torneo', torneo_id=key) }}" class="tournament-tab {{ 'active' if t.id == torneo.id else '' }}" style="color: white; text-decoration: none; padding: 8px 15px; border-radius: 20px; background: {{ 'var(--primary-gold)' if t.id == torneo.id else 'rgba(255,255,255,0.1)' }}; font-weight: bold; white-space: nowrap; transition: all 0.3s; color: {{ 'var(--accent-color)' if t.id == torneo.id else 'white' }};">
+                {{ t.nombre }}
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- AI Search Section -->
+    <section class="ai-search-section">
+        <div class="container text-center">
+            <h2 class="ai-title">PREGÚNTALE A LA IA - {{ torneo.nombre|upper }}</h2>
+            <div class="search-container">
+                <input type="text" id="ai-input" placeholder="Ej: ¿Quién es el goleador? o ¿Quién tiene más asistencias en 9no?">
+                <button id="ai-btn" class="ai-btn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            <div id="ai-response" class="ai-response hidden"></div>
+        </div>
+    </section>
 
     <!-- Hero Section / Noticias Destacadas -->
     <section id="noticias" class="hero-section text-center">
@@ -50,7 +75,7 @@
     <!-- Tabla de Posiciones estilo Mundial 2014 -->
     <section id="posiciones" class="standings-section">
         <div class="container">
-            <h2 class="section-title fade-in">TABLA DE POSICIONES</h2>
+            <h2 class="section-title fade-in">TABLA - {{ torneo.nombre|upper }}</h2>
             <div class="table-responsive fade-in">
                 <table class="styled-table">
                     <thead>
@@ -65,7 +90,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for equipo in posiciones %}
+                        {% for equipo in torneo.posiciones %}
                         <tr>
                             <td>{{ loop.index }}</td>
                             <td class="team-name">{{ equipo.equipo }}</td>
@@ -82,12 +107,31 @@
         </div>
     </section>
 
+    <!-- Partidos Recientes / Resultados -->
+    <section id="resultados" class="matches-section" style="background-color: var(--bg-color); padding-top: 2rem;">
+        <div class="container">
+            <h2 class="section-title fade-in">ÚLTIMOS RESULTADOS</h2>
+            <div class="matches-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                {% for partido in torneo.partidos %}
+                <div class="match-card fade-in" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; align-items: center; text-align: center;">
+                    <span class="match-phase" style="font-size: 0.8rem; text-transform: uppercase; color: #888; font-weight: bold; margin-bottom: 10px;">{{ partido.fase }}</span>
+                    <div class="match-teams" style="display: flex; justify-content: space-between; width: 100%; align-items: center; font-family: var(--font-heading); font-size: 1.5rem;">
+                        <span class="home-team" style="color: var(--primary-green);">{{ partido.local }}</span>
+                        <span class="score" style="background: var(--accent-color); color: white; padding: 5px 15px; border-radius: 50px; font-size: 1.2rem;">{{ partido.marcador }}</span>
+                        <span class="away-team" style="color: var(--primary-green);">{{ partido.visitante }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
     <!-- Goleadores y Estadísticas -->
     <section id="goleadores" class="stats-section">
         <div class="container">
             <h2 class="section-title fade-in">MÁXIMOS ANOTADORES</h2>
             <div class="stats-grid">
-                {% for goleador in goleadores %}
+                {% for goleador in torneo.goleadores %}
                 <div class="player-card fade-in">
                     <div class="rank">#{{ loop.index }}</div>
                     <div class="player-info">
@@ -97,6 +141,24 @@
                     <div class="goals">
                         <span>{{ goleador.goles }}</span>
                         <small>Goles</small>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Asistidores -->
+            <h2 class="section-title fade-in" style="margin-top: 50px;">MÁXIMOS ASISTIDORES</h2>
+            <div class="stats-grid">
+                {% for asistidor in torneo.asistidores %}
+                <div class="player-card fade-in">
+                    <div class="rank">#{{ loop.index }}</div>
+                    <div class="player-info">
+                        <h3>{{ asistidor.nombre }}</h3>
+                        <span class="course">{{ asistidor.curso }}</span>
+                    </div>
+                    <div class="goals" style="background-color: var(--primary-gold); color: var(--accent-color);">
+                        <span>{{ asistidor.asistencias }}</span>
+                        <small>Asist.</small>
                     </div>
                 </div>
                 {% endfor %}

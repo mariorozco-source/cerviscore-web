@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
@@ -33,6 +35,11 @@ DATASETS = {
             {"local": "3 A", "visitante": "2 C", "marcador": "3 - 1", "fase": "Final"},
             {"local": "3 B", "visitante": "2 C", "marcador": "1 - 2", "fase": "Semifinal"},
             {"local": "3 A", "visitante": "2 A", "marcador": "4 - 0", "fase": "Semifinal"}
+        ],
+        "proximos_partidos": [
+            {"dia": "Lunes", "fecha": "22 Mar 2026", "hora": "08:00", "local": "3 A", "visitante": "3 B", "cancha": "Cancha Norte"},
+            {"dia": "Martes", "fecha": "23 Mar 2026", "hora": "09:20", "local": "2 C", "visitante": "2 A", "cancha": "Cancha Central"},
+            {"dia": "Jueves", "fecha": "25 Mar 2026", "hora": "08:40", "local": "1 B", "visitante": "2 B", "cancha": "Cancha Norte"}
         ]
     },
     "primaria_alta": {
@@ -61,6 +68,11 @@ DATASETS = {
             {"local": "5 B", "visitante": "5 A", "marcador": "2 - 1", "fase": "Final"},
             {"local": "5 B", "visitante": "4 C", "marcador": "5 - 0", "fase": "Semifinal"},
             {"local": "5 A", "visitante": "4 A", "marcador": "3 - 2", "fase": "Semifinal"}
+        ],
+        "proximos_partidos": [
+            {"dia": "Lunes", "fecha": "22 Mar 2026", "hora": "10:10", "local": "5 B", "visitante": "4 C", "cancha": "Cancha Central"},
+            {"dia": "Miércoles", "fecha": "24 Mar 2026", "hora": "11:00", "local": "5 A", "visitante": "4 A", "cancha": "Cancha Sur"},
+            {"dia": "Viernes", "fecha": "26 Mar 2026", "hora": "09:20", "local": "5 C", "visitante": "4 B", "cancha": "Cancha Norte"}
         ]
     },
     "bachillerato_bajo": {
@@ -92,6 +104,11 @@ DATASETS = {
             {"local": "8 C", "visitante": "7 A", "marcador": "1 - 1", "fase": "Final (4-3 p)"},
             {"local": "8 C", "visitante": "8 A", "marcador": "2 - 0", "fase": "Semifinal"},
             {"local": "7 A", "visitante": "6 B", "marcador": "3 - 1", "fase": "Semifinal"}
+        ],
+        "proximos_partidos": [
+            {"dia": "Lunes", "fecha": "22 Mar 2026", "hora": "12:20", "local": "8 C", "visitante": "8 A", "cancha": "Cancha Central"},
+            {"dia": "Martes", "fecha": "23 Mar 2026", "hora": "13:10", "local": "7 A", "visitante": "6 B", "cancha": "Cancha Sur"},
+            {"dia": "Jueves", "fecha": "25 Mar 2026", "hora": "12:20", "local": "8 B", "visitante": "7 C", "cancha": "Cancha Norte"}
         ]
     },
     "bachillerato_alto": {
@@ -123,6 +140,11 @@ DATASETS = {
             {"local": "11 B", "visitante": "10 A", "marcador": "3 - 2", "fase": "Final"},
             {"local": "11 B", "visitante": "9 C", "marcador": "4 - 1", "fase": "Semifinal"},
             {"local": "10 A", "visitante": "11 A", "marcador": "2 - 1", "fase": "Semifinal"}
+        ],
+        "proximos_partidos": [
+            {"dia": "Lunes", "fecha": "22 Mar 2026", "hora": "14:00", "local": "11 B", "visitante": "11 A", "cancha": "Estadio Principal"},
+            {"dia": "Miércoles", "fecha": "24 Mar 2026", "hora": "15:10", "local": "10 A", "visitante": "9 C", "cancha": "Estadio Principal"},
+            {"dia": "Viernes", "fecha": "26 Mar 2026", "hora": "14:50", "local": "10 C", "visitante": "11 C", "cancha": "Cancha Sur"}
         ]
     }
 }
@@ -130,22 +152,28 @@ DATASETS = {
 # Noticias Globales (Genéricas para la home)
 noticias = [
     {
-        "titulo": "¡Finalizan las Fases de Grupos!",
+        "titulo": "Arrancan los Cuadrangulares de Semifinal",
         "imagen": "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
         "fecha": "15 Mar 2026",
-        "resumen": "Se definen los clasificados a cuartos de final en todas las categorías."
+        "resumen": "Ya quedaron definidos los cruces de la próxima semana en todas las categorías del torneo escolar."
     },
     {
-        "titulo": "11B Rompe Récord de Goles",
+        "titulo": "11B Mantiene el Liderato en Mayores",
         "imagen": "https://images.unsplash.com/photo-1517466787929-bc90951d0974?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
         "fecha": "14 Mar 2026",
-        "resumen": "La categoría mayores vivió una jornada histórica con la goleada de los seniors."
+        "resumen": "Con 22 puntos y una diferencia de gol de +14, 11B llega como favorito a la recta final."
     },
     {
-        "titulo": "Gran Nivel en Primaria Baja",
+        "titulo": "Primaria Baja Sorprende con Partidos Cerrados",
         "imagen": "https://images.unsplash.com/photo-1522778119026-d647f0565c6a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
         "fecha": "12 Mar 2026",
-        "resumen": "Los más pequeños demuestran que tienen, un gran futuro en el futbol del colegio."
+        "resumen": "Los cursos de 1ro a 3ro vienen mostrando gran nivel competitivo y varias remontadas históricas."
+    },
+    {
+        "titulo": "La Pelea por el Botín de Oro está Encendida",
+        "imagen": "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+        "fecha": "13 Mar 2026",
+        "resumen": "Sebastian 'El Tanque' lidera en mayores, pero Matias R. y Santiago M. siguen recortando distancia."
     }
 ]
 
@@ -168,6 +196,10 @@ def get_standings(category_id):
     if not dataset:
         return jsonify({"error": "Category not found"}), 404
     return jsonify(dataset)
+
+@app.route('/healthz')
+def healthz():
+    return jsonify({"status": "ok"}), 200
 
 @app.route('/api/chat', methods=['POST'])
 def chat():
@@ -235,4 +267,5 @@ def chat():
     return jsonify({"respuesta": respuesta})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 8000))
+    app.run(host='0.0.0.0', port=port, debug=True)

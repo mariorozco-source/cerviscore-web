@@ -6,7 +6,7 @@
     <title>CERVISCORE | Olimpiadas Cervantinas</title>
     <!-- Fuentes para estilo futbolero y deportivo -->
     <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v='20260315-2') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -50,24 +50,22 @@
                 </button>
             </div>
             <div id="ai-response" class="ai-response hidden"></div>
-        </div>
-    </section>
 
-    <!-- Hero Section / Noticias Destacadas -->
-    <section id="noticias" class="hero-section text-center">
-        <div class="container">
-            <h2 class="section-title fade-in">ÚLTIMAS NOTICIAS</h2>
-            <div class="news-grid">
-                {% for noticia in noticias %}
-                <div class="news-card fade-in">
-                    <div class="news-image" style="background-image: url('{{ noticia.imagen }}');"></div>
-                    <div class="news-content">
-                        <span class="news-date">{{ noticia.fecha }}</span>
-                        <h3>{{ noticia.titulo }}</h3>
-                        <p>{{ noticia.resumen }}</p>
+            <!-- Noticias directamente debajo del buscador -->
+            <div id="noticias" class="news-home-block">
+                <h2 class="section-title fade-in">ÚLTIMAS NOTICIAS DEL TORNEO</h2>
+                <div class="news-grid">
+                    {% for noticia in noticias %}
+                    <div class="news-card fade-in">
+                        <div class="news-image" style="background-image: url('{{ noticia.imagen }}');"></div>
+                        <div class="news-content">
+                            <span class="news-date">{{ noticia.fecha }}</span>
+                            <h3>{{ noticia.titulo }}</h3>
+                            <p>{{ noticia.resumen }}</p>
+                        </div>
                     </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
             </div>
         </div>
     </section>
@@ -104,22 +102,58 @@
                     </tbody>
                 </table>
             </div>
+
+            <h2 class="section-title fade-in" style="margin-top: 50px;">TABLA GENERAL DE TODAS LAS CATEGORÍAS</h2>
+            {% for key, t in torneos_disponibles.items() %}
+            <div class="table-block fade-in">
+                <h3 class="mini-table-title">{{ t.nombre }}</h3>
+                <div class="table-responsive">
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>POS</th>
+                                <th>EQUIPO</th>
+                                <th>PJ</th>
+                                <th>PG</th>
+                                <th>PE</th>
+                                <th>PP</th>
+                                <th>PTS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for equipo in t.posiciones %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td class="team-name">{{ equipo.equipo }}</td>
+                                <td>{{ equipo.pj }}</td>
+                                <td>{{ equipo.pg }}</td>
+                                <td>{{ equipo.pe }}</td>
+                                <td>{{ equipo.pp }}</td>
+                                <td class="points">{{ equipo.pts }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endfor %}
         </div>
     </section>
 
     <!-- Partidos Recientes / Resultados -->
     <section id="resultados" class="matches-section" style="background-color: var(--bg-color); padding-top: 2rem;">
         <div class="container">
-            <h2 class="section-title fade-in">ÚLTIMOS RESULTADOS</h2>
+            <h2 class="section-title fade-in">PARTIDOS DE LA PRÓXIMA SEMANA - {{ torneo.nombre|upper }}</h2>
             <div class="matches-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
-                {% for partido in torneo.partidos %}
+                {% for partido in torneo.proximos_partidos %}
                 <div class="match-card fade-in" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; align-items: center; text-align: center;">
-                    <span class="match-phase" style="font-size: 0.8rem; text-transform: uppercase; color: #888; font-weight: bold; margin-bottom: 10px;">{{ partido.fase }}</span>
+                    <span class="match-phase" style="font-size: 0.8rem; text-transform: uppercase; color: #888; font-weight: bold; margin-bottom: 10px;">{{ partido.dia }} {{ partido.fecha }} - {{ partido.hora }}</span>
                     <div class="match-teams" style="display: flex; justify-content: space-between; width: 100%; align-items: center; font-family: var(--font-heading); font-size: 1.5rem;">
                         <span class="home-team" style="color: var(--primary-green);">{{ partido.local }}</span>
-                        <span class="score" style="background: var(--accent-color); color: white; padding: 5px 15px; border-radius: 50px; font-size: 1.2rem;">{{ partido.marcador }}</span>
+                        <span class="score" style="background: var(--accent-color); color: white; padding: 5px 15px; border-radius: 50px; font-size: 1.2rem;">VS</span>
                         <span class="away-team" style="color: var(--primary-green);">{{ partido.visitante }}</span>
                     </div>
+                    <p style="margin-top: 10px; font-size: 0.9rem; color: #666;">Cancha: {{ partido.cancha }}</p>
                 </div>
                 {% endfor %}
             </div>
@@ -129,7 +163,23 @@
     <!-- Goleadores y Estadísticas -->
     <section id="goleadores" class="stats-section">
         <div class="container">
-            <h2 class="section-title fade-in">MÁXIMOS ANOTADORES</h2>
+            <h2 class="section-title fade-in">RESUMEN DE ESTADÍSTICAS POR TORNEO</h2>
+            <div class="stats-grid">
+                {% for key, t in torneos_disponibles.items() %}
+                <div class="player-card fade-in">
+                    <div class="player-info">
+                        <h3>{{ t.nombre }}</h3>
+                        <span class="course">Líder: {{ t.posiciones[0].equipo }} ({{ t.posiciones[0].pts }} pts)</span>
+                    </div>
+                    <div class="goals">
+                        <span>{{ t.goleadores[0].goles }}</span>
+                        <small>{{ t.goleadores[0].nombre }}</small>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <h2 class="section-title fade-in" style="margin-top: 50px;">MÁXIMOS ANOTADORES - {{ torneo.nombre|upper }}</h2>
             <div class="stats-grid">
                 {% for goleador in torneo.goleadores %}
                 <div class="player-card fade-in">
@@ -147,7 +197,7 @@
             </div>
             
             <!-- Asistidores -->
-            <h2 class="section-title fade-in" style="margin-top: 50px;">MÁXIMOS ASISTIDORES</h2>
+            <h2 class="section-title fade-in" style="margin-top: 50px;">MÁXIMOS ASISTIDORES - {{ torneo.nombre|upper }}</h2>
             <div class="stats-grid">
                 {% for asistidor in torneo.asistidores %}
                 <div class="player-card fade-in">
@@ -177,6 +227,6 @@
         </div>
     </footer>
 
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/script.js', v='20260315-2') }}"></script>
 </body>
 </html>

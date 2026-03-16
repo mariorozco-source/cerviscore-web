@@ -131,9 +131,10 @@ section {
     color: var(--accent-color);
     text-transform: uppercase;
     position: relative;
-    display: inline-block;
-    left: 50%;
-    transform: translateX(-50%);
+    display: block;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .section-title::after {
@@ -303,15 +304,18 @@ section {
 }
 
 .table-block {
-    margin-top: 24px;
+    margin-top: 28px;
 }
 
 .mini-table-title {
     font-family: var(--font-heading);
     font-size: 1.9rem;
     color: var(--primary-green);
-    margin: 0 0 12px;
-    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    width: fit-content;
+    margin: 0 auto 14px;
+    text-align: center;
 }
 
 .table-responsive {
